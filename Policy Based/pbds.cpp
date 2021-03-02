@@ -1,87 +1,78 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define pb push_back
+#define F first
+#define S second
+#define all(v) v.begin(),v.end()
+#define prnt(a) cout<<a
+#define sp cout<<" "
+#define nl cout<<"\n"
+#define in1(a) cin>>a
+#define in2(a,b) cin>>a>>b
+#define in3(a,b,c) cin>>a>>b>>c;
+#define inf 2147483647
+string toString(ll n){stringstream ss; ss<<n; return ss.str();}
+void yesNo(bool ck){cout<<(ck? "YES\n":"NO\n");}
+vector<ll> removeDup(vector<ll>v){
+sort(all(v)); v.resize(distance(v.begin(),unique(all(v))));return v;}
+
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
-using namespace std;
 using namespace __gnu_pbds;
 
-struct ordered_multiset{ 					// multiset supporting duplicating values in set
-    int len = 0;
-    const int ADD = 1000010;
-    const int MAXVAL = 1000000010;
-    unordered_map<int,int> mp; 				// hash = 96814
-    tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>T;
+//------------------------------------------------------------------------------//
 
-    ordered_multiset(){
-    	len = 0;
-    	T.clear();
-    	mp.clear();
-    }
+typedef tree<ll, null_type, less_equal<ll>,                 //takes duplicate value
+rb_tree_tag, tree_order_statistics_node_update> pds;
 
-    inline void insert(int x){
-        len++;
-        x += MAXVAL;
-        int c = mp[x]++;
-        T.insert((x*ADD) + c);
-    }
+//tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update>T;
 
-    inline void erase(int x){
-        x += MAXVAL;
-        int c = mp[x];
-        if(c>0){
-            c--, mp[x]--, len--;
-            T.erase((x*ADD) + c); 
-        } 
-    }
 
-    inline int kth(int k){        			// 1-based index,  returns the
-        if(k<1 || k>len){return -1;}     	// K'th element in the treap,
-        auto it = T.find_by_order(--k); 	// -1 if none exists
-        return ((*it)/ADD) - MAXVAL; 
-    } 
+const int N=2e6+50;
+const int mod=1e9+7;
 
-    inline int lower_bound(int x){      	// Count of value <x in treap
-        x += MAXVAL;
-        int c = mp[x];
-        return (T.order_of_key((x*ADD)+c));
-    }
-
-    inline int upper_bound(int x){      	// Count of value <=x in treap
-        x += MAXVAL;
-        int c = mp[x];
-        return (T.order_of_key((x*ADD)+c));
-    }
-
-    inline int size(){
-    	return len;			 				// Number of elements in treap
-    }  
-};
 
 int main(){
-	int n; cin>>n;
-    ordered_multiset s;
-    vector<int>v(n);
-    for(int i=0; i<n; i++){
-        cin>>v[i];
-        s.insert(v[i]);
-    }
-    int q; cin>>q;
-    while(q--){
-    	int op; cin>>op;
-    	if(op==1){
-    		int idx,val;
-    		cin>>idx>>val;
-    		s.erase(v[idx-1]);
-    		s.insert(val);
-    	}
-    	else{
-    		int val;
-    		cin>>val;
-    		int res=s.lower_bound(val);	
-    		cout<<res<<"\n";
-    	}
+
+    //freopen("output.txt", "w", stdout);
+    //freopen("input.txt", "r", stdin);
+    //ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
+
+    /*
+        order_of_key(n) : Find the position of n;
+        find_by_order(idx) : Find the value of this position
+    */
+
+
+    ll t=1;
+    for(ll T=1; T<=t; T++){
+        ll n,q; cin>>n>>q;
+        vector<ll>v(n);
+        pds s;
+        for(ll i=0; i<n; i++){
+            cin>>v[i];
+            s.insert(v[i]);
+        }
+        while(q--){
+            char op;
+            cin>>op;
+            if(op=='?'){
+                ll a,b;             //Find no of elements between a and b
+                cin>>a>>b;
+                ll res=s.order_of_key(b+1)-s.order_of_key(a);
+                cout<<res<<"\n";
+            }
+            else{
+                ll idx,val;         //update idx with val   
+                cin>>idx>>val;
+                s.erase(s.find_by_order(s.order_of_key(v[idx])));
+                s.insert(val);
+                v[idx]=val;
+            }
+        }
     }
     return 0;
 }
-
-
 
