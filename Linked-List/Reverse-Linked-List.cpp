@@ -52,26 +52,17 @@ void addNodeEnd(ll roll){
 }
 
 void reverseLinkedList(){
-	ll flag=0;
-	node *lastNode=NULL, *newRoot=root;
-	while(1){
-		node *currNode=root, *prevNode=root;
-		while(currNode->next!=lastNode){
-			prevNode=currNode;
-			currNode=currNode->next;
-		}
-		if(flag==0){
-			flag=1;
-			newRoot=currNode;
-		}
-		if(currNode==root){
-			currNode->next=NULL;
-			break;
-		}
-		lastNode=currNode;
-		currNode->next=prevNode;
+	node *currNode=root;
+	node *prevNode=NULL,*temp;
+	while(currNode->next!=NULL){
+		temp=currNode;
+		currNode=currNode->next;
+		temp->next=prevNode;
+		prevNode=temp;
+		
 	}
-	root=newRoot;
+	currNode->next=prevNode;
+	root=currNode;
 }
 
 void printNode(){
@@ -91,7 +82,7 @@ int main(){
 
 	ll t=1;
 	for(ll T=1; T<=t; T++){
-		vector<ll>v={3};
+		vector<ll>v={3,2,6,1};
 		for(ll i=0; i<v.size(); i++){
 			addNodeEnd(v[i]);
 		}
