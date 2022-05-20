@@ -63,7 +63,7 @@ int main(){
 	ll t=1;
 	for(ll T=1; T<=t; T++){
 		cin>>n;
-		vector<ll>v(n);			//If the values of the array too large (10^9) then mapping these values
+		vector<ll>v(n);			//If the values of the array will be too large (10^9) then mapping these values
 		ll cntInv=0,R=0;
 		for(ll i=0; i<n; i++){
 			cin>>v[i];
