@@ -1,4 +1,7 @@
 #include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
 using namespace std;
 typedef long long ll;
 typedef unsigned long long ull;
@@ -6,109 +9,103 @@ typedef unsigned long long ull;
 #define F first
 #define S second
 #define all(v) v.begin(),v.end()
-#define inf 2147483647
+#define Mid(b,e) b+(e-b)/2
+#define inf 1e18
+double PI=2*acos(0.0);
 
 //---------------------------------------------------------------------------//
 //Timus: 314795JS
-
 //knight moves
-//ll X[8] = {2, 1, -1, -2, -2, -1, 1, 2};   
-//ll Y[8] = {1, 2, 2, 1, -1, -2, -2, -1}; 
-//ll dx[]={1,-1,0,0};
-//ll dy[]={0,0,1,-1};
+// ll X[8] = {2, 1, -1, -2, -2, -1, 1, 2};
+// ll Y[8] = {1, 2, 2, 1, -1, -2, -2, -1};
+// ll dx[]={1,-1,0,0};
+// ll dy[]={0,0,1,-1};
 void yesNo(bool ck){cout<<(ck? "YES\n":"NO\n");}
-ll toInt(string s){stringstream ss;ss<<s;int n;ss>>n;return n;}
-string toString(ll n){stringstream ss;ss<<n;string s;ss>>s;return s;}
-string UPPER(string s){transform(all(s),s.begin(),::toupper);return s;}
-string LOWER(string s){transform(all(s),s.begin(),::tolower);return s;}
-bool isDigit(char ch){if(ch>=48 && ch<=57) return true; else return false;}
-vector<ll>removeDup(vector<ll>v){sort(all(v)); v.resize(distance(v.begin(),unique(all(v))));return v;}
-bool isVowel(char ch){ch=toupper(ch);if(ch=='A'||ch=='U'||ch=='I'||ch=='O'||ch=='E'){return true;}return false;}
-bool isCons(char ch){if(isalpha(ch) && !isVowel(ch)){return true;} return false;}
+//typedef tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update>pbds;
+//typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update>pbds; 
+//typedef tree<pair<ll,ll>, null_type, less<pair<ll,ll>>, rb_tree_tag, tree_order_statistics_node_update>pbds; 
 
 //------------------------------------------------------------------------------//
-const ll N=2e5+50;
+
+
+const ll P=29;
+const ll N=2e6+50;
 const ll mod=1e9+7;
 
-class Data{
+class query{
 public:
-    ll L,R,id;
-};
+	ll L,R,ID;
+}Q[N];
 
-Data Q[N];
-vector<ll>v(N);
-unordered_map<ll,ll>cnt;
-ll res[N],curr_ans,segment_size;
+ll ans,cnt[N];
+const ll k=350;
+vector<ll>v(N),res(N);
 
-bool cmp(Data &a, Data &b){
-    ll block1 = a.L/segment_size;
-    ll block2 = b.L/segment_size;
-    if(block1==block2){
-        return a.R<b.R;
-    }
-    return block1<block2;
+bool cmp(query &a, query &b){
+	ll block_a=a.L/k,block_b=b.L/k;
+	if(block_a==block_b){return a.R<b.R;}
+	return block_a<block_b;
 }
 
 void add(ll idx){
-    cnt[v[idx]]++;
-    if(cnt[v[idx]]==1){
-        curr_ans++;
-    }
+	cnt[v[idx]]++;
+	if(cnt[v[idx]]==1){
+		ans++;
+	}
 }
 
 void remove(ll idx){
-    cnt[v[idx]]--;
-    if(cnt[v[idx]]==0){
-        curr_ans--;
-    }
+	cnt[v[idx]]--;
+	if(cnt[v[idx]]==0){
+		ans--;
+	}
 }
 
 void solve(ll n, ll q){
-    segment_size=sqrt(n);
-    sort(Q+1,Q+q+1,cmp);
-    ll currL=1,currR=0;
-    for(ll i=1; i<=q; i++){
-        while(currL>Q[i].L){
-            add(--currL);
-        }
-        while(currR<Q[i].R){
-            add(++currR);
-        }
-        while(currL<Q[i].L){
-            remove(currL++);
-        }
-        while(currR>Q[i].R){
-            remove(currR--);
-        }
-        res[Q[i].id]=curr_ans;
-    }
+	sort(Q,Q+q,cmp);
+	ll currL=0,currR=-1;
+	for(ll i=0; i<q; i++){
+		while(currL>Q[i].L){
+			add(--currL);
+		}
+		while(currR<Q[i].R){
+			add(++currR);
+		}
+		while(currL<Q[i].L){
+			remove(currL++);
+		}
+		while(currR>Q[i].R){
+			remove(currR--);
+		}
+		res[Q[i].ID]=ans;
+	}
 }
-
-
-//Count distinct number in a range
 
 int main(){
 
-    //freopen("C:/Users/Aman/Documents/output.txt", "w", stdout);
-    //freopen("C:/Users/Aman/Documents/input.txt", "r", stdin);
-    //ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	//ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
 
-    ll t=1;
-    for(ll T=1; T<=t; T++){
-        ll n; cin>>n;
-        for(ll i=1; i<=n; i++){
-            cin>>v[i];
-        }
-        ll q; cin>>q;
-        for(ll i=1; i<=q; i++){
-            cin>>Q[i].L>>Q[i].R;
-            Q[i].id=i;
-        }
-        solve(n,q);
-        for(ll i=1;i<=q; i++){
-            cout<<res[i]<<"\n";
-        }
-    }
-    return 0;
+	ll t=1;
+	for(ll T=1; T<=t; T++){
+		ll n; cin>>n;
+		for(ll i=0; i<n; i++){
+			cin>>v[i];
+		}
+		ll q; cin>>q;
+		for(ll i=0; i<q; i++){
+			cin>>Q[i].L>>Q[i].R;
+			Q[i].L--, Q[i].R--;		//Makes 0-based from 1-based indexing
+			Q[i].ID=i;
+		}
+		solve(n,q);
+		for(ll i=0; i<q; i++){
+			cout<<res[i]<<"\n";
+		}
+	}
+	return 0;
 }
+
+
 
