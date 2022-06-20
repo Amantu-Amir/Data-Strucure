@@ -1,17 +1,14 @@
 class Solution {
 public:
     bool hasCycle(ListNode *head) {
-        if(head==NULL){
-            return false;
-        }
         ListNode *turtoise=head;
-        ListNode *hare=head->next;
+        ListNode *hare=head;
         while(hare!=NULL and hare->next!=NULL){
+            turtoise=turtoise->next;
+            hare=hare->next->next;
             if(turtoise==hare){
                 return true;
             }
-            turtoise=turtoise->next;
-            hare=hare->next->next;
         }
         return false;
     }
