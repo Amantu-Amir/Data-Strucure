@@ -81,8 +81,8 @@ int main(){
                 cout<<v[idx]<<"\n";
             }
         }
-	}
-	return 0;
+     }
+    return 0;
 }
 
 
