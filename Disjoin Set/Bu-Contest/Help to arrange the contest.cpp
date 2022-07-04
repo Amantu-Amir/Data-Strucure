@@ -40,7 +40,7 @@ int main(){
 	//freopen("output.txt", "w", stdout);
 	//ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
 	
-	//https://www.hackerrank.com/contests/intra-department-coding-contest-csebu-2022-1/challenges/help-to-arrange-the-contest/problem
+	//https://www.hackerrank.com/contests/intra-department-coding-contest-csebu-2022-1/challenges/help-to-arrange-the-contest
 
 	ll t=1;
 	for(ll T=1; T<=t; T++){
@@ -61,7 +61,6 @@ int main(){
             if(type==1){
                 ll idx,val;
                 cin>>idx>>val;
-                ll prev=idx;
                 while(val>0){
                     idx=Find(idx);
                     ll Min=min(v[idx], val);
@@ -75,7 +74,6 @@ int main(){
                         idx=rep[idx];
                     }
                 }
-                prev=Find(prev);
             }
             else{
                 ll idx;
