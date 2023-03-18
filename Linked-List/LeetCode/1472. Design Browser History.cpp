@@ -1,3 +1,47 @@
+//Doubly
+class BrowserHistory {
+public:
+    class ListNode {
+        public:
+        ListNode *next, *prev;
+        string link;
+        ListNode(string str) {
+            next = NULL;
+            link = str;
+        }
+    };
+
+    ListNode *root;
+    BrowserHistory(string homepage) {
+        root = new ListNode(homepage);
+        root->prev = NULL;
+    }
+    
+    void visit(string url) {
+        root->next = new ListNode(url);
+        root->next->prev = root;
+        root = root->next;
+    }
+    
+    string back(int steps) {
+        while (steps and root->prev != NULL) {
+            steps--;
+            root = root->prev;
+        }
+        return root->link;
+    }
+    
+    string forward(int steps) {
+        while (steps and root->next != NULL) {
+            steps--;
+            root = root->next;
+        }
+        return root->link;
+    }
+};
+
+
+//Singly
 class BrowserHistory {
 public:
     class ListNode {
@@ -52,10 +96,3 @@ public:
     }
 };
 
-/**
- * Your BrowserHistory object will be instantiated and called as such:
- * BrowserHistory* obj = new BrowserHistory(homepage);
- * obj->visit(url);
- * string param_2 = obj->back(steps);
- * string param_3 = obj->forward(steps);
- */
